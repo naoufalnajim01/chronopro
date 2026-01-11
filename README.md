@@ -8,7 +8,7 @@
 
 Une solution complète et élégante pour gérer tous vos besoins de chronométrage en cours d'EPS : chronomètre avec tours, entraînement fractionné (HIIT/Tabata), technique Pomodoro, et minuteur personnalisé.
 
-![Chrono EPS Pro+ Screenshot](https://via.placeholder.com/800x400/3b82f6/ffffff?text=Chrono+EPS+Pro%2B)
+![Chrono EPS Pro+ Screenshot](./img/screenshot.png)
 
 ## ✨ Fonctionnalités
 
@@ -162,19 +162,14 @@ Le fichier `.htaccess` inclut :
 - 📦 Compression GZIP
 - ⚡ Cache optimisé
 
-## 🌐 Hébergement
+## 🌐 Déploiement
 
-### Hostinger (Configuration actuelle)
-```
-Chemin : /home/u957461838/domains/connectapps.org/public_html/chronopro/public/
-URL : https://chronopro.connectapps.org
-```
+Ce projet peut être déployé sur n'importe quel hébergement web statique :
 
-### Autres Options
-- GitHub Pages
-- Netlify
-- Vercel
-- Tout hébergement web statique
+- **GitHub Pages** - Gratuit et simple
+- **Netlify** - Déploiement automatique depuis Git
+- **Vercel** - Performance optimale
+- **Hébergement Apache/Nginx** - Avec le fichier `.htaccess` fourni
 
 ## 🤝 Contribution
 
@@ -214,7 +209,6 @@ Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de
 ## 👨‍💻 Auteur
 
 **Naoufal Najim**
-- 🌐 Website: [connectapps.org](https://connectapps.org)
 - 💼 LinkedIn: [@naoufalnajim01](https://www.linkedin.com/in/naoufalnajim01/)
 - 🐙 GitHub: [@naoufalnajim01](https://github.com/naoufalnajim01)
 - 📧 Email: naoufal.najim19@gmail.com
