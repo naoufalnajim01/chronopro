@@ -1,0 +1,169 @@
+# ============================================
+# CHRONO EPS PRO+ - Security & Performance
+# Apache .htaccess Configuration
+# ============================================
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# ============================================
+# SECURITY HEADERS
+# ============================================
+
+<IfModule mod_headers.c>
+    # Prevent clickjacking attacks
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Enable XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; media-src 'self'; connect-src 'self'"
+    
+    # Permissions Policy
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    
+    # Remove Server Signature
+    Header unset Server
+    Header always unset X-Powered-By
+</IfModule>
+
+# ============================================
+# FORCE HTTPS (Uncomment if SSL is enabled)
+# ============================================
+
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ============================================
+# PREVENT DIRECTORY BROWSING
+# ============================================
+
+Options -Indexes
+
+# ============================================
+# PROTECT SENSITIVE FILES
+# ============================================
+
+# Block access to hidden files (starting with .)
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to backup and config files
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak|config|dist|fla|inc|psd|swp|env)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ============================================
+# CACHING FOR PERFORMANCE
+# ============================================
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Default expiration
+    ExpiresDefault "access plus 1 month"
+    
+    # HTML - no cache (always fresh)
+    ExpiresByType text/html "access plus 0 seconds"
+    
+    # CSS & JavaScript
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    
+    # Images
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # Fonts
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # Audio
+    ExpiresByType audio/mpeg "access plus 1 year"
+    ExpiresByType audio/mp3 "access plus 1 year"
+</IfModule>
+
+# ============================================
+# GZIP COMPRESSION
+# ============================================
+
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML and fonts
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE application/font-woff
+    AddOutputFilterByType DEFLATE application/font-woff2
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ============================================
+# CORRECT MIME TYPES
+# ============================================
+
+<IfModule mod_mime.c>
+    AddType text/html .html .htm
+    AddType text/css .css
+    AddType application/javascript .js
+    AddType image/svg+xml .svg .svgz
+    AddType audio/mpeg .mp3
+    AddType font/woff .woff
+    AddType font/woff2 .woff2
+</IfModule>
+
+# ============================================
+# ERROR DOCUMENTS
+# ============================================
+
+ErrorDocument 404 /index.html
+ErrorDocument 403 /index.html
+
+# ============================================
+# PREVENT HOTLINKING (Optional)
+# ============================================
+
+# Uncomment to prevent other sites from embedding your assets
+# RewriteCond %{HTTP_REFERER} !^$
+# RewriteCond %{HTTP_REFERER} !^https?://(www\.)?chronopro\.connectapps\.org [NC]
+# RewriteRule \.(jpg|jpeg|png|gif|webp|mp3)$ - [F,L]
+
+# ============================================
+# CACHE CONTROL HEADERS
+# ============================================
+
+<IfModule mod_headers.c>
+    # Cache static assets for 1 year
+    <FilesMatch "\.(css|js|ico|gif|jpeg|jpg|png|webp|svg|woff|woff2|mp3)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # Don't cache HTML
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Chrono EPS Pro+ - Application de chronométrage professionnelle pour les professeurs d'éducation physique et sportive">
+    <meta name="keywords" content="chronomètre, EPS, sport, minuteur, intervalle, pomodoro, éducation physique">
+    <meta name="author" content="Naoufal Najim">
+    <title>Chrono EPS Pro+</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱️</text></svg>">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="logo-container">
+            <i class="fas fa-stopwatch-20 logo-icon"></i>
+            <div class="title-slogan-wrapper">
+                <span class="app-title">Chrono <strong>EPS Pro+</strong></span>
+                <span id="animated-slogan" class="app-slogan"></span>
+            </div>
+        </div>
+
+        <nav class="app-nav" role="navigation" aria-label="Navigation principale">
+            <button class="nav-button active" data-mode="stopwatch" type="button">
+                <i class="fas fa-stopwatch" aria-hidden="true"></i>
+                <span>Chronomètre</span>
+            </button>
+            <button class="nav-button" data-mode="interval" type="button">
+                <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                <span>Intervalle</span>
+            </button>
+            <button class="nav-button" data-mode="devoir" type="button">
+                <i class="fas fa-pencil-alt" aria-hidden="true"></i>
+                <span>Devoir</span>
+            </button>
+            <button class="nav-button" data-mode="pomodoro" type="button">
+                <i class="fas fa-mug-hot" aria-hidden="true"></i>
+                <span>Pomodoro</span>
+            </button>
+            <button class="nav-button" data-mode="custom" type="button">
+                <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+                <span>Minuteur</span>
+            </button>
+        </nav>
+
+        <div class="header-tools">
+            <button id="large-display-toggle" class="icon-button" type="button"
+                aria-label="Activer le mode plein écran">
+                <i class="fas fa-expand" aria-hidden="true"></i>
+            </button>
+            <div class="theme-switcher">
+                <input type="checkbox" id="themeToggle" class="theme-toggle-checkbox"
+                    aria-label="Basculer entre thème clair et sombre">
+                <label for="themeToggle" class="theme-toggle-label">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                    <i class="fas fa-sun" aria-hidden="true"></i>
+                    <span class="theme-toggle-ball"></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Stopwatch Section -->
+        <section id="stopwatch-section" class="timer-section active-section" aria-labelledby="stopwatch-title">
+            <div class="section-header">
+                <h2 id="stopwatch-title">
+                    <i class="fas fa-stopwatch title-icon" aria-hidden="true"></i>
+                    Chronomètre
+                </h2>
+                <button class="info-button" data-guide="stopwatch-guide" type="button"
+                    aria-label="Aide pour le chronomètre">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="section-guide" id="stopwatch-guide" role="tooltip">
+                <button class="close-guide-btn" type="button" aria-label="Fermer l'aide">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <div class="guide-content">
+                    <h4>Chronomètre</h4>
+                    <p class="guide-text">Mesurez le temps, enregistrez les tours et analysez la régularité.</p>
+                    <p class="guide-text">Idéal pour les courses et épreuves continues.</p>
+                </div>
+            </div>
+
+            <div class="section-content-landscape">
+                <div class="landscape-column timer-column">
+                    <div class="session-info">
+                        <input type="text" id="session-name" placeholder="Nom de la session..."
+                            class="session-name-input" aria-label="Nom de la session">
+                        <div class="start-options">
+                            <input type="checkbox" id="sw-countdown-enable">
+                            <label for="sw-countdown-enable">Décompte 3s</label>
+                        </div>
+                    </div>
+
+                    <div class="timer-display-container">
+                        <div class="time-display stopwatch-display">
+                            <span class="digit-group">
+                                <span class="digit" id="sw-hr">00</span>
+                                <span class="unit">h</span>
+                            </span>
+                            <span class="digit-group">
+                                <span class="digit" id="sw-min">00</span>
+                                <span class="unit">m</span>
+                            </span>
+                            <span class="digit-group">
+                                <span class="digit" id="sw-sec">00</span>
+                                <span class="unit">s</span>
+                            </span>
+                            <span class="digit-group ms-group">
+                                <span class="digit ms" id="sw-ms">00</span>
+                            </span>
+                        </div>
+                        <div class="countdown-overlay" id="sw-countdown-display" aria-live="assertive">3</div>
+                    </div>
+
+                    <div class="controls">
+                        <button class="control-button primary start" id="sw-start-pause" type="button">
+                            <i class="fas fa-play" aria-hidden="true"></i>
+                            <span>Démarrer</span>
+                        </button>
+                        <button class="control-button secondary lap" id="sw-lap" type="button" disabled>
+                            <i class="fas fa-flag" aria-hidden="true"></i>
+                            <span>Tour</span>
+                        </button>
+                        <button class="control-button secondary reset" id="sw-reset" type="button" disabled>
+                            <i class="fas fa-undo" aria-hidden="true"></i>
+                            <span>Reset</span>
+                        </button>
+                        <button class="control-button secondary clear-laps" id="sw-clear-laps" type="button" disabled>
+                            <i class="fas fa-trash" aria-hidden="true"></i>
+                            <span>Effacer</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="landscape-column laps-column">
+                    <div class="laps-container" id="laps-container">
+                        <h3 class="laps-title">Tours Enregistrés</h3>
+                        <div class="lap-table-wrapper">
+                            <table class="lap-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">N°</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Tour</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lap-table-body"></tbody>
+                            </table>
+                        </div>
+                        <p class="no-laps-message" id="no-laps">Aucun tour enregistré.</p>
+                    </div>
+
+                    <div class="lap-stats" id="lap-stats-display">
+                        <h3>Statistiques</h3>
+                        <div class="stat-item">
+                            <span><i class="fas fa-bolt" aria-hidden="true"></i> Plus rapide:</span>
+                            <span id="lap-stat-fastest">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span><i class="fas fa-hourglass-end" aria-hidden="true"></i> Plus lent:</span>
+                            <span id="lap-stat-slowest">--</span>
+                        </div>
+                        <div class="stat-item">
+                            <span><i class="fas fa-chart-line" aria-hidden="true"></i> Moyenne:</span>
+                            <span id="lap-stat-average">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interval Section -->
+        <section id="interval-section" class="timer-section" aria-labelledby="interval-title">
+            <div class="section-header">
+                <h2 id="interval-title">
+                    <i class="fas fa-sync-alt title-icon" aria-hidden="true"></i>
+                    Minuteur d'Intervalle
+                </h2>
+                <button class="info-button" data-guide="interval-guide" type="button"
+                    aria-label="Aide pour l'intervalle">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="section-guide" id="interval-guide" role="tooltip">
+                <button class="close-guide-btn" type="button" aria-label="Fermer l'aide">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <div class="guide-content">
+                    <h4>Intervalle</h4>
+                    <p class="guide-text">Entraînement fractionné (HIIT, Tabata, etc.).</p>
+                    <p class="guide-text">Configurez <span class="highlight">Travail</span> / <span
+                            class="highlight">Repos</span> / Rounds.</p>
+                </div>
+            </div>
+
+            <div class="section-content-landscape">
+                <div class="landscape-column setup-column">
+                    <div class="interval-setup">
+                        <h3>Configuration</h3>
+                        <div class="interval-inputs">
+                            <div class="input-group-horizontal">
+                                <label for="interval-work-m">Travail:</label>
+                                <div class="time-inputs">
+                                    <input type="number" id="interval-work-m" min="0" max="59" value="0"
+                                        class="time-input small" aria-label="Minutes de travail">
+                                    <span>m</span>
+                                    <input type="number" id="interval-work-s" min="0" max="59" value="30"
+                                        class="time-input small" aria-label="Secondes de travail">
+                                    <span>s</span>
+                                </div>
+                            </div>
+                            <div class="input-group-horizontal">
+                                <label for="interval-rest-m">Repos:</label>
+                                <div class="time-inputs">
+                                    <input type="number" id="interval-rest-m" min="0" max="59" value="0"
+                                        class="time-input small" aria-label="Minutes de repos">
+                                    <span>m</span>
+                                    <input type="number" id="interval-rest-s" min="0" max="59" value="15"
+                                        class="time-input small" aria-label="Secondes de repos">
+                                    <span>s</span>
+                                </div>
+                            </div>
+                            <div class="input-group-horizontal">
+                                <label for="interval-rounds">Rounds:</label>
+                                <input type="number" id="interval-rounds" min="1" value="8"
+                                    class="time-input small rounds-input" aria-label="Nombre de rounds">
+                            </div>
+                        </div>
+
+                        <h3>Préréglages</h3>
+                        <div class="interval-presets">
+                            <div class="preset-group input-group-horizontal">
+                                <label for="preset-name">Nom:</label>
+                                <input type="text" id="preset-name" placeholder="Ex: Tabata 20/10"
+                                    class="preset-name-input" aria-label="Nom du préréglage">
+                                <button id="save-preset-btn" class="control-button tertiary small" type="button"
+                                    aria-label="Sauvegarder le préréglage">
+                                    <i class="fas fa-save" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="preset-group input-group-horizontal">
+                                <label for="load-preset-select">Charger:</label>
+                                <select id="load-preset-select" aria-label="Sélectionner un préréglage">
+                                    <option value="">Choisir...</option>
+                                </select>
+                                <button id="delete-preset-btn" class="control-button secondary small" type="button"
+                                    aria-label="Supprimer le préréglage">
+                                    <i class="fas fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="start-options">
+                            <input type="checkbox" id="interval-countdown-enable">
+                            <label for="interval-countdown-enable">Décompte 3s</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="landscape-column timer-column interval-timer-column">
+                    <div class="timer-display-container with-progress interval-timer-container"
+                        id="interval-display-wrapper">
+                        <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+                            <circle class="progress-ring-bg" cx="60" cy="60" r="54"></circle>
+                            <circle id="interval-progress-ring" class="progress-ring-circle" cx="60" cy="60" r="54">
+                            </circle>
+                        </svg>
+                        <div class="interval-status-text interval-type" id="interval-type" aria-live="polite">Prêt</div>
+                        <div class="time-display interval-display">
+                            <span class="digit-group">
+                                <span class="digit" id="interval-min">00</span>
+                                <span class="unit">m</span>
+                            </span>
+                            <span class="digit-group">
+                                <span class="digit" id="interval-sec">00</span>
+                                <span class="unit">s</span>
+                            </span>
+                        </div>
+                        <div class="interval-status-text interval-rounds" id="interval-rounds-display"
+                            aria-live="polite">Round 1 / 8</div>
+                        <div class="countdown-overlay" id="interval-countdown-display" aria-live="assertive">3</div>
+                    </div>
+
+                    <div class="controls">
+                        <button class="control-button primary start" id="interval-start-pause" type="button">
+                            <i class="fas fa-play" aria-hidden="true"></i>
+                            <span>Démarrer</span>
+                        </button>
+                        <button class="control-button secondary reset" id="interval-reset" type="button" disabled>
+                            <i class="fas fa-undo" aria-hidden="true"></i>
+                            <span>Reset</span>
+                        </button>
+                        <button class="control-button secondary next" id="interval-next" type="button" disabled>
+                            <i class="fas fa-step-forward" aria-hidden="true"></i>
+                            <span>Suivant</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Devoir Section -->
+        <section id="devoir-section" class="timer-section" aria-labelledby="devoir-title">
+            <div class="section-header">
+                <h2 id="devoir-title">
+                    <i class="fas fa-pencil-alt title-icon" aria-hidden="true"></i>
+                    Mode Devoir
+                </h2>
+            </div>
+
+            <div class="devoir-mode-options" role="tablist">
+                <button class="devoir-option-button active" data-submode="chrono" type="button" role="tab"
+                    aria-selected="true">
+                    Chronomètre Devoir
+                </button>
+                <button class="devoir-option-button" data-submode="heure" type="button" role="tab"
+                    aria-selected="false">
+                    Heure Actuelle
+                </button>
+            </div>
+
+            <div class="devoir-sub-section active-sub-section" id="devoir-chrono" role="tabpanel">
+                <div class="timer-display-container">
+                    <div class="time-display devoir-chrono-display">
+                        <span class="digit-group">
+                            <span class="digit" id="d-chrono-hr">00</span>
+                            <span class="unit">h</span>
+                        </span>
+                        <span class="digit-group">
+                            <span class="digit" id="d-chrono-min">00</span>
+                            <span class="unit">m</span>
+                        </span>
+                        <span class="digit-group">
+                            <span class="digit" id="d-chrono-sec">00</span>
+                            <span class="unit">s</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="control-button primary start" id="d-chrono-start-pause" type="button">
+                        <i class="fas fa-play" aria-hidden="true"></i>
+                        <span>Démarrer</span>
+                    </button>
+                    <button class="control-button secondary reset" id="d-chrono-reset" type="button" disabled>
+                        <i class="fas fa-undo" aria-hidden="true"></i>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="devoir-sub-section" id="devoir-heure" role="tabpanel">
+                <div class="heure-actuelle-container">
+                    <div id="heure-actuelle-display" class="time-display heure-actuelle-display" aria-live="polite">
+                        <span class="digit">--</span>
+                        <span class="time-separator">:</span>
+                        <span class="digit">--</span>
+                        <span class="time-separator">:</span>
+                        <span class="digit">--</span>
+                    </div>
+                    <p id="motivation-message" class="motivation-message">
+                        Concentration et réussite ! <i class="fas fa-brain" aria-hidden="true"></i>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pomodoro Section -->
+        <section id="pomodoro-section" class="timer-section" aria-labelledby="pomodoro-title">
+            <div class="section-header">
+                <h2 id="pomodoro-title">
+                    <i class="fas fa-mug-hot title-icon" aria-hidden="true"></i>
+                    Pomodoro
+                </h2>
+                <button class="info-button" data-guide="pomodoro-guide" type="button"
+                    aria-label="Aide pour le pomodoro">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="section-guide" id="pomodoro-guide" role="tooltip">
+                <button class="close-guide-btn" type="button" aria-label="Fermer l'aide">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <div class="guide-content">
+                    <h4>Pomodoro</h4>
+                    <p class="guide-text">Technique de productivité par intervalles.</p>
+                    <p class="guide-text"><span class="highlight">25 min</span> de travail, puis <span
+                            class="highlight">5 min</span> de pause.</p>
+                </div>
+            </div>
+
+            <div class="pomodoro-options" role="group" aria-label="Options Pomodoro">
+                <button class="pomo-option-button active" data-time="25" type="button">Pomodoro (25m)</button>
+                <button class="pomo-option-button" data-time="5" type="button">Pause Courte (5m)</button>
+                <button class="pomo-option-button" data-time="15" type="button">Pause Longue (15m)</button>
+            </div>
+
+            <div class="timer-display-container with-progress">
+                <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="progress-ring-bg" cx="60" cy="60" r="54"></circle>
+                    <circle id="pomo-progress-ring" class="progress-ring-circle" cx="60" cy="60" r="54"></circle>
+                </svg>
+                <div class="time-display pomodoro-display">
+                    <span class="digit-group">
+                        <span class="digit" id="pomo-min">25</span>
+                        <span class="unit">m</span>
+                    </span>
+                    <span class="digit-group">
+                        <span class="digit" id="pomo-sec">00</span>
+                        <span class="unit">s</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="status-message" id="pomo-status" aria-live="polite">Prêt !</div>
+
+            <div class="controls">
+                <button class="control-button primary start" id="pomo-start-pause" type="button">
+                    <i class="fas fa-play" aria-hidden="true"></i>
+                    <span>Démarrer</span>
+                </button>
+                <button class="control-button secondary reset" id="pomo-reset" type="button" disabled>
+                    <i class="fas fa-undo" aria-hidden="true"></i>
+                    <span>Reset</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Custom Timer Section -->
+        <section id="custom-section" class="timer-section" aria-labelledby="custom-title">
+            <div class="section-header">
+                <h2 id="custom-title">
+                    <i class="fas fa-hourglass-half title-icon" aria-hidden="true"></i>
+                    Minuteur Personnalisé
+                </h2>
+                <button class="info-button" data-guide="custom-guide" type="button" aria-label="Aide pour le minuteur">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="section-guide" id="custom-guide" role="tooltip">
+                <button class="close-guide-btn" type="button" aria-label="Fermer l'aide">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <div class="guide-content">
+                    <h4>Minuteur</h4>
+                    <p class="guide-text">Décompte simple depuis une durée personnalisée.</p>
+                    <p class="guide-text">Parfait pour les exercices chronométrés.</p>
+                </div>
+            </div>
+
+            <div class="section-content-landscape">
+                <div class="landscape-column setup-column">
+                    <div class="custom-input-area">
+                        <h3>Définir la durée</h3>
+                        <div class="input-group-horizontal">
+                            <label for="custom-h">Heures:</label>
+                            <input type="number" id="custom-h" min="0" placeholder="00" class="time-input"
+                                aria-label="Heures">
+                        </div>
+                        <div class="input-group-horizontal">
+                            <label for="custom-m">Minutes:</label>
+                            <input type="number" id="custom-m" min="0" max="59" placeholder="00" class="time-input"
+                                aria-label="Minutes">
+                        </div>
+                        <div class="input-group-horizontal">
+                            <label for="custom-s">Secondes:</label>
+                            <input type="number" id="custom-s" min="0" max="59" placeholder="00" class="time-input"
+                                aria-label="Secondes">
+                        </div>
+                        <button class="control-button tertiary set-timer" id="custom-set" type="button">
+                            <i class="fas fa-check" aria-hidden="true"></i>
+                            <span>Définir</span>
+                        </button>
+                    </div>
+                    <div class="status-message" id="custom-status" aria-live="polite">Définir une durée.</div>
+                </div>
+
+                <div class="landscape-column timer-column">
+                    <div class="timer-display-container with-progress custom-timer-container">
+                        <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+                            <circle class="progress-ring-bg" cx="60" cy="60" r="54"></circle>
+                            <circle id="custom-progress-ring" class="progress-ring-circle" cx="60" cy="60" r="54">
+                            </circle>
+                        </svg>
+                        <div class="time-display custom-display">
+                            <span class="digit-group">
+                                <span class="digit" id="custom-hr-d">00</span>
+                                <span class="unit">h</span>
+                            </span>
+                            <span class="digit-group">
+                                <span class="digit" id="custom-min-d">00</span>
+                                <span class="unit">m</span>
+                            </span>
+                            <span class="digit-group">
+                                <span class="digit" id="custom-sec-d">00</span>
+                                <span class="unit">s</span>
+                            </span>
+                        </div>
+                        <div class="countdown-overlay" id="custom-countdown-display" aria-live="assertive">3</div>
+                    </div>
+
+                    <div class="controls">
+                        <div class="start-options">
+                            <input type="checkbox" id="custom-countdown-enable">
+                            <label for="custom-countdown-enable">Décompte 3s</label>
+                        </div>
+                        <button class="control-button primary start" id="custom-start-pause" type="button" disabled>
+                            <i class="fas fa-play" aria-hidden="true"></i>
+                            <span>Démarrer</span>
+                        </button>
+                        <button class="control-button secondary reset" id="custom-reset" type="button" disabled>
+                            <i class="fas fa-undo" aria-hidden="true"></i>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <span class="footer-copyright">© <span id="current-year">2025</span> Chrono EPS Pro+</span>
+        <span class="footer-separator" aria-hidden="true">|</span>
+        <span class="footer-dev">Développé par Naoufal Najim <i class="fas fa-heart heart-icon"
+                aria-hidden="true"></i></span>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/naoufalnajim01/" target="_blank" rel="noopener noreferrer"
+                class="social-link" aria-label="Profil LinkedIn">
+                <i class="fab fa-linkedin" aria-hidden="true"></i>
+            </a>
+            <a href="https://github.com/naoufalnajim01" target="_blank" rel="noopener noreferrer" class="social-link"
+                aria-label="Profil GitHub">
+                <i class="fab fa-github" aria-hidden="true"></i>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Audio Elements -->
+    <audio id="tickSound" src="./audio/start_beep.mp3" preload="auto"></audio>
+    <audio id="lapSound" src="./audio/start_beep.mp3" preload="auto"></audio>
+    <audio id="startSound" src="./audio/start_beep.mp3" preload="auto"></audio>
+    <audio id="stopSound" src="./audio/stop_beep.mp3" preload="auto"></audio>
+    <audio id="countdownSound" src="./audio/start_beep.mp3" preload="auto"></audio>
+
+    <!-- Large Display Exit Button -->
+    <button id="large-display-exit-btn" class="icon-button large-exit-button" type="button"
+        aria-label="Quitter le mode plein écran">
+        <i class="fas fa-compress" aria-hidden="true"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+
+</html>
